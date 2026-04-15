@@ -39,15 +39,8 @@
  *     the scope of his variables and of course, makes use of
  *     event delegation, to keep his event listeners tidied up!
  *
- *     You - 2026-03-25
+ *     Ronja - 2026-03-25
  *******************************************************/
-let sumExpenses = 0; //Use this variable to keep the sum up to date.
-
-function submitForm(e){
-    //TODO: Prevent the default behavior of the submit button.
-    //TODO: Validate the form. If everything is fine, add the expense to the tracker and reset the form.
-}
-
 
 /*****************************
  * DO NOT CHANGE CODE BELOW.
@@ -77,3 +70,59 @@ let isEmpty = function(variable) {
 function formatEuro(number) {
     return number.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
 }
+let sumExpenses = 0; //Use this variable to keep the sum up to date.
+
+function submitForm(e){
+    //TODO: Prevent the default behavior of the submit button.
+    e.preventDefault();
+    //TODO: Validate the form. If everything is fine, add the expense to the tracker and reset the form.
+    const dateInput = document.getElementById("date");
+    const amountInput = document.getElementById("amount");
+    const textInput = document.getElementById("expense");
+
+    const date = dateInput.value;
+    const amount = parseFloat(amountInput.value);
+    const text = textInput.value;
+
+    // isEmpty validation
+    if (isEmpty(date)) {
+        dateInput.focus();
+        return;
+    }
+
+    if (isEmpty(amountInput.value) || amount < 0.01) {
+        amountInput.focus();
+        return;
+    }
+
+    if (isEmpty(text) || text.length < 3) {
+        textInput.focus();
+    }
+    sumExpenses += amount;
+
+    // tabel //
+    const tbody = document.querySelector("tbody");
+    const row = document.createElement("tr");
+
+    row.innerHTML =
+        "<td>" + date + "</td>" +
+        "<td>" + formatEuro(amount) + "</td>" +
+        "<td>" + text + "</td>" +
+        "<td><button class='delete'>X</button></td>";
+    tbody.appendChild(row);
+    document.querySelector("form").reset();
+}
+//event listener //
+document.querySelector("form").addEventListener("submit", submitForm);
+
+document.querySelector("tbody").addEventListener("click", function(e) {
+    if (e.target.classList.contains("delete")) {
+        e.target.closest("tr").remove();
+    }
+});
+
+
+
+
+
+
